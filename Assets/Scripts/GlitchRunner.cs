@@ -9,7 +9,7 @@ public class GlitchRunner : EnemyBase
     protected override void Start()
     {
         maxHP = 25f;
-        moveSpeed = 3.6f;
+        moveSpeed = 2.6f;
         damage = 5f;
         soulDropType = SoulType.Speed;
         soulDropCount = 1;

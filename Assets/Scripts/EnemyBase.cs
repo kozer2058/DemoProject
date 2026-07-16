@@ -6,9 +6,9 @@ public class EnemyBase : MonoBehaviour
     [Header("Stats")]
     public float maxHP = 50f;
     public float currentHP;
-    public float moveSpeed = 2f;
-    public float damage = 10f;
-    public float coreAttackInterval = 1f;
+    public float moveSpeed = 1f;
+    public float damage = 20f;
+    public float coreAttackInterval = 2f;
 
     [Header("Soul Drop")]
     public SoulType soulDropType = SoulType.Speed;
@@ -21,6 +21,11 @@ public class EnemyBase : MonoBehaviour
     public Sprite[] deathSprites;
     public float walkAnimationFps = 6f;
     public float deathFrameDuration = 0.14f;
+
+    [Header("Detection Settings")]
+    public float detectionRadius = 5f; // Bán kính phát hiện mục tiêu
+    public LayerMask targetLayer;      // Layer chứa Player và Công trình
+    public float scanInterval = 0.2f;   // Thời gian giãn cách giữa các lần quét (giúp mượt game)
 
     protected Transform targetTransform;
 
@@ -35,8 +40,12 @@ public class EnemyBase : MonoBehaviour
     private float walkAnimationTime;
     private Rigidbody2D physicsBody;
     private MapBounds2D mapBounds;
+    private float nextScanTime;
 
     protected bool IsDead => isDead;
+
+    private PlayerStats attackedPlayer; // <-- THÊM DÒNG NÀY: Lưu trữ Player đang va chạm
+    private float nextAttackTime;       // <-- ĐỔI TÊN: Dùng chung thời gian hồi đòn cho cả Core và Player
 
     protected virtual void Start()
     {
@@ -55,16 +64,8 @@ public class EnemyBase : MonoBehaviour
 
         IgnoreCrowdCollisions();
 
-        GameObject core = GameObject.FindWithTag("EnergyCore");
-        if (core != null)
-        {
-            targetTransform = core.transform;
-            return;
-        }
-
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
-            targetTransform = player.transform;
+        // Mặc định lúc xuất hiện, tìm Core/Player ở xa trước
+        FindDefaultTarget();
     }
 
     protected virtual void Update()
@@ -75,9 +76,16 @@ public class EnemyBase : MonoBehaviour
         StopPhysicsDrift();
         UpdateWalkAnimation();
 
+        // Chủ động quét mục tiêu xung quanh theo chu kỳ thời gian
+        if (Time.time >= nextScanTime)
+        {
+            ScanForTargets();
+            nextScanTime = Time.time + scanInterval;
+        }
+
         if (attackedCore != null)
         {
-            TryAttackCore();
+            TryAttackTargets();
             ClampToMapBounds();
             return;
         }
@@ -93,6 +101,60 @@ public class EnemyBase : MonoBehaviour
 
         Vector2 dir = (targetTransform.position - transform.position).normalized;
         transform.Translate(dir * moveSpeed * Time.deltaTime);
+    }
+
+    // Cơ chế quét mục tiêu bằng Code thay thế cho Trigger Zone
+    private void ScanForTargets()
+    {
+        // Quét tất cả các Collider nằm trong vòng tròn bán kính detectionRadius thuộc targetLayer
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius, targetLayer);
+
+        if (hitColliders.Length == 0)
+        {
+            // Nếu không có ai ở gần, quay lại đuổi theo mục tiêu mặc định từ xa
+            if (targetTransform == null || !targetTransform.gameObject.activeInHierarchy)
+            {
+                FindDefaultTarget();
+            }
+            return;
+        }
+
+        Transform closestTarget = null;
+        float minDistance = float.MaxValue;
+
+        foreach (var col in hitColliders)
+        {
+            // Lọc đúng Tag mong muốn
+            if (col.CompareTag("Player") || col.CompareTag("EnergyCore"))
+            {
+                float distance = Vector2.Distance(transform.position, col.transform.position);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestTarget = col.transform;
+                }
+            }
+        }
+
+        // Nếu tìm thấy đối tượng gần nhất ở trong tầm, đổi mục tiêu sang đối tượng đó
+        if (closestTarget != null)
+        {
+            targetTransform = closestTarget;
+        }
+    }
+
+    private void FindDefaultTarget()
+    {
+        GameObject core = GameObject.FindWithTag("EnergyCore");
+        if (core != null)
+        {
+            targetTransform = core.transform;
+            return;
+        }
+
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+            targetTransform = player.transform;
     }
 
     public virtual void TakeDamage(float amount)
@@ -322,34 +384,83 @@ public class EnemyBase : MonoBehaviour
         sr.color = original;
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+void OnCollisionStay2D(Collision2D collision)
     {
-        if (!collision.collider.CompareTag("EnergyCore"))
-            return;
+        // 1. Xử lý va chạm với EnergyCore (Giữ nguyên logic cũ của bạn)
+        if (collision.collider.CompareTag("EnergyCore"))
+        {
+            EnergyCore core = collision.collider.GetComponent<EnergyCore>();
+            if (core != null)
+            {
+                attackedCore = core;
+            }
+        }
 
-        EnergyCore core = collision.collider.GetComponent<EnergyCore>();
-        if (core == null)
-            return;
+        // 2. THÊM MỚI: Xử lý va chạm với Player
+        if (collision.collider.CompareTag("Player"))
+        {
+            PlayerStats player = collision.collider.GetComponent<PlayerStats>();
+            if (player != null)
+            {
+                attackedPlayer = player;
+            }
+        }
 
-        attackedCore = core;
+        // Thực hiện tấn công bất kỳ mục tiêu nào đang bám dính
+        TryAttackTargets();
     }
 
-    void OnCollisionExit2D(Collision2D collision)
+ void OnCollisionExit2D(Collision2D collision)
     {
-        if (!collision.collider.CompareTag("EnergyCore"))
-            return;
+        // Rời khỏi EnergyCore
+        if (collision.collider.CompareTag("EnergyCore"))
+        {
+            EnergyCore core = collision.collider.GetComponent<EnergyCore>();
+            if (core != null && core == attackedCore)
+                attackedCore = null;
+        }
 
-        EnergyCore core = collision.collider.GetComponent<EnergyCore>();
-        if (core != null && core == attackedCore)
-            attackedCore = null;
+        // THÊM MỚI: Rời khỏi Player
+        if (collision.collider.CompareTag("Player"))
+        {
+            PlayerStats player = collision.collider.GetComponent<PlayerStats>();
+            if (player != null && player == attackedPlayer)
+                attackedPlayer = null;
+        }
     }
 
-    void TryAttackCore()
+    void TryAttackTargets()
     {
-        if (attackedCore == null || Time.time < nextCoreAttackTime)
+        if (Time.time < nextAttackTime)
             return;
 
-        attackedCore.TakeDamage(damage);
-        nextCoreAttackTime = Time.time + Mathf.Max(0.1f, coreAttackInterval);
+        bool attackedSomething = false;
+
+        // Nếu đang chạm Core -> Gây sát thương cho Core
+        if (attackedCore != null)
+        {
+            attackedCore.TakeDamage(damage);
+            attackedSomething = true;
+        }
+        
+        // Nếu đang chạm Player -> Gây sát thương cho Player (dùng hàm TakeDamage có sẵn của bạn)
+        else if (attackedPlayer != null)
+        {
+            attackedPlayer.TakeDamage(damage);
+            attackedSomething = true;
+        }
+
+        // Nếu có tấn công (Core hoặc Player), bắt đầu tính thời gian hồi đòn tiếp theo
+        if (attackedSomething)
+        {
+            nextAttackTime = Time.time + Mathf.Max(0.1f, coreAttackInterval);
+        }
+    }
+
+    // Vẽ vòng tròn đỏ trong Editor giúp dễ căn chỉnh bán kính tầm nhìn
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

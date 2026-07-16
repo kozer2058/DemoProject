@@ -178,3 +178,12 @@ MonoBehaviour:
   soulDropCount: 1
   soulPrefab: {fileID: 488192875571322814, guid: a15dd8bf7abbd204aade453fc20e0198, type: 3}
   xpReward: 5
+  walkSprites: []
+  deathSprites: []
+  walkAnimationFps: 6
+  deathFrameDuration: 0.14
+  detectionRadius: 5
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  scanInterval: 0.2

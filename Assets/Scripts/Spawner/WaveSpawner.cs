@@ -67,28 +67,33 @@ public class WaveSpawner : MonoBehaviour
     }
 
     IEnumerator RunWaves()
+{
+    yield return new WaitForSeconds(3f);
+
+    while (wavesRunning)
     {
-        yield return new WaitForSeconds(3f);
+        currentWave++;
+        Debug.Log($"=== WAVE {currentWave} START ===");
 
-        while (wavesRunning)
-        {
-            currentWave++;
-            Debug.Log($"=== WAVE {currentWave} START ===");
+        int runners = Mathf.Min(6 + currentWave * 2, IsEndless ? 28 : 15);
+        int brutes = Mathf.Max(0, currentWave - 1);
+        int swallowers = currentWave < 2 ? 0 : Mathf.Min(1 + (currentWave - 2) / 2, IsEndless ? 7 : 4);
 
-            int runners = Mathf.Min(3 + currentWave * 2, IsEndless ? 28 : 15);
-            int brutes = Mathf.Max(0, currentWave - 1);
-            int swallowers = currentWave < 2 ? 0 : Mathf.Min(1 + (currentWave - 2) / 2, IsEndless ? 7 : 4);
+        SpawnGroup(glitchRunnerPrefab, runners);
+        SpawnGroup(bruteMutantPrefab, brutes);
+        SpawnSoulSwallowers(swallowers);
 
-            SpawnGroup(glitchRunnerPrefab, runners);
-            SpawnGroup(bruteMutantPrefab, brutes);
-            SpawnSoulSwallowers(swallowers);
+        if (currentWave % 5 == 0)
+            SpawnMiniBoss();
 
-            if (currentWave % 5 == 0)
-                SpawnMiniBoss();
-
-            yield return new WaitForSeconds(IsEndless ? 18f : 20f);
-        }
+        // Đợi hết thời gian chiến đấu của Wave hiện tại
+        yield return new WaitForSeconds(IsEndless ? 18f : 20f);
+        
+        // --- THÊM KHOẢNG NGHỈ 10 GIÂY Ở ĐÂY ---
+        Debug.Log($"=== WAVE {currentWave} CLEARED! 10s RESTING TIME... ===");
+        yield return new WaitForSeconds(10f);
     }
+}
 
     void SpawnGroup(GameObject prefab, int count)
     {

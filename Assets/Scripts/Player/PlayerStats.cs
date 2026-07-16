@@ -9,7 +9,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float currentHP;
 
     [Header("Experience")]
-    public float xpToNextLevel = 100f;
+    public float xpToNextLevel = 70f;
     [SerializeField] private float currentXP = 0f;
     [SerializeField] private int level = 1;
 

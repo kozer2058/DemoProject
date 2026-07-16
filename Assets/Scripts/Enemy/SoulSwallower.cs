@@ -19,7 +19,7 @@ public class SoulSwallower : EnemyBase
         moveSpeed = 2.15f;
         damage = 12f;
         soulDropType = SoulType.Defense;
-        soulDropCount = 1;
+        soulDropCount = 3;
         xpReward = 10f;
 
         base.Start();

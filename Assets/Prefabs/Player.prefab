@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2542764939569284100}
   - component: {fileID: 8581344028448780632}
   - component: {fileID: 6991081790680424345}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -215,6 +215,23 @@ MonoBehaviour:
   fireRate: 0.25
   bulletSpeed: 12
   autoFire: 1
+  weaponPath: 0
+  rifleFireRateMultiplier: 0.75
+  rifleBulletSpeedBonus: 2
+  shotgunPelletCount: 5
+  shotgunSpreadAngle: 36
+  shotgunRange: 4.2
+  shotgunFireRateMultiplier: 1.25
+  shotgunBulletSpeed: 10
+  shotgunDamageMultiplier: 0.55
+  shotgunCloseDamageMultiplier: 1.9
+  shotgunFarDamageMultiplier: 0.55
+  weaponLevel: 1
+  rifleRange: 8
+  rangeBonus: 0
+  damageBonus: 0
+  pierceBonus: 0
+  knockbackForce: 0
   suckRange: 4
   suckForce: 10
   allowQToSuck: 1
@@ -249,7 +266,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9073356989620378536}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}

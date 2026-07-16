@@ -3,10 +3,10 @@ using UnityEngine;
 public class TurretShooter : MonoBehaviour
 {
     [Header("Stats")]
-    public float range = 6f;
+    public float range = 8f;
     public float fireRate = 0.65f;
     public float bulletSpeed = 10f;
-    public float bulletDamage = 12f;
+    public float bulletDamage = 20f;
     public bool isActive = false;
     public TurretAttackMode attackMode = TurretAttackMode.Bullet;
 
