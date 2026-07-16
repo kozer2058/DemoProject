@@ -13,7 +13,7 @@ public class WaveSpawner : MonoBehaviour
 
     [Header("Match")]
     public int currentWave;
-    public float matchDuration = 900f;
+    public float matchDuration = 300f;
     public float elapsedTime;
     public bool finalBossSpawned;
 

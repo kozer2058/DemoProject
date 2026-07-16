@@ -54,7 +54,7 @@ public class MainMenuController : MonoBehaviour
     void StartMode(GameMode mode)
     {
         GameSession.PrepareRun(mode);
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("StoryScene");
     }
 
     void RefreshLastRecord()
