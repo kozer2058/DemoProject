@@ -515,8 +515,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127071379}
   m_CullTransparentMesh: 1
-<<<<<<< Updated upstream
-=======
 --- !u!1 &152314859
 GameObject:
   m_ObjectHideFlags: 0
@@ -1871,7 +1869,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642112620}
   m_CullTransparentMesh: 1
->>>>>>> Stashed changes
 --- !u!1 &723785597
 GameObject:
   m_ObjectHideFlags: 0
@@ -2485,8 +2482,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2abf88375d44daca820ba3c8360c1b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-<<<<<<< Updated upstream
-=======
   timedModeButton: {fileID: 0}
   endlessModeButton: {fileID: 0}
   quitButton: {fileID: 0}
@@ -2606,7 +2601,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
->>>>>>> Stashed changes
 --- !u!1 &953740844
 GameObject:
   m_ObjectHideFlags: 0
@@ -3184,8 +3178,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1016876041}
   m_CullTransparentMesh: 1
-<<<<<<< Updated upstream
-=======
 --- !u!1 &1036278225
 GameObject:
   m_ObjectHideFlags: 0
@@ -5306,7 +5298,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1389977236}
   m_CullTransparentMesh: 1
->>>>>>> Stashed changes
 --- !u!1 &1441956963
 GameObject:
   m_ObjectHideFlags: 0
@@ -5487,8 +5478,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &1535980723
 GameObject:
   m_ObjectHideFlags: 0
@@ -6050,7 +6039,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1651516045}
   m_CullTransparentMesh: 1
->>>>>>> Stashed changes
 --- !u!1 &1703839886
 GameObject:
   m_ObjectHideFlags: 0
@@ -6421,6 +6409,7 @@ GameObject:
   - component: {fileID: 1816991733}
   - component: {fileID: 1816991732}
   - component: {fileID: 1816991731}
+  - component: {fileID: 1816991734}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6502,8 +6491,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!114 &1816991734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6690,7 +6677,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1970475443}
   m_CullTransparentMesh: 1
->>>>>>> Stashed changes
 --- !u!1 &1971777984
 GameObject:
   m_ObjectHideFlags: 0
@@ -7233,8 +7219,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2068818773}
   m_CullTransparentMesh: 1
-<<<<<<< Updated upstream
-=======
 --- !u!1 &2134311129
 GameObject:
   m_ObjectHideFlags: 0
@@ -7341,7 +7325,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
->>>>>>> Stashed changes
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
